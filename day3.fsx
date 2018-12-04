@@ -24,9 +24,13 @@ let part1 =
     |> Seq.length
 
 let part2 = 
-    input |> Seq.map parseClaim
-    |> Seq.collect (fun claim -> claim |> calculateCells |> Seq.map (fun cel -> cel, claim.ClaimId))
-    |> Seq.groupBy fst
-    |> Seq.filter (snd >> Seq.length >> ((<)1))
-    |> Seq.map (snd >> snd)
-    |> Set.ofSeq
+    let claims = input |> Seq.map parseClaim
+    let dups = claims
+            |> Seq.collect (fun claim -> claim |> calculateCells |> Seq.map (fun cel -> cel, claim.ClaimId))
+            |> Seq.groupBy fst
+            |> Seq.filter (snd >> Seq.length >> ((<)1))
+            |> Seq.collect (snd >> Seq.map snd)
+            |> Set.ofSeq
+    claims |> Seq.filter (fun claim -> dups |> Set.contains claim.ClaimId |> not)
+    |> Seq.head
+
