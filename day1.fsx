@@ -5,8 +5,7 @@ let part1 = Seq.reduce (+) input
 
 let part2 = 
         let hash = System.Collections.Generic.HashSet<int> ()
-        input |> Seq.unfold (fun s -> Some (s, s))
-        |> Seq.collect id
+        seq { while true do yield! input }
         |> Seq.scan (+) 0
         |> Seq.filter (hash.Add >> not)
         |> Seq.head
